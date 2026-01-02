@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 写作
-permalink: /writing/
+permalink: /writings/
 ---
 
 这里集中放置与写作直接相关的内容。
