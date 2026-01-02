@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 腐鼠
-permalink: /writings/DecayingRats/
+permalink: /writings/decaying-rats/
 ---
 
 ## 目录
