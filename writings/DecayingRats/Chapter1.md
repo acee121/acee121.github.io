@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "腐鼠：第一节"
+title: "1"
 parent: 《腐鼠》
 permalink: /writings/decaying-rats/chapter-1
 ---
