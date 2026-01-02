@@ -3,6 +3,7 @@ layout: page
 title: "腐鼠：第一节"
 parent: 《腐鼠》
 permalink: /writings/decaying-rats/chapter-1
+---
 
 > 迄今为止，我们所谈及的内容似乎将这个层次结构视为一种固定不变的秩序。但实际上，它远没有我们所暗示的那样僵化。
 >
