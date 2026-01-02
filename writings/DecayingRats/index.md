@@ -4,6 +4,10 @@ title: 腐鼠
 permalink: /writings/decaying-rats/
 ---
 
+<div style="text-align: center; margin-bottom: 2em;">
+  <img src="./cover-marks.jpg" alt="封面" style="width: 50%; height: auto;"/>
+</div>
+
 ## 目录
 1. [第一节]({{ site.baseurl }}/writings/decaying-rats/chapter-1)
 2. [第二节]({{ site.baseurl }}/writings/decaying-rats/chapter-2)
