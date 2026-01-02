@@ -5,7 +5,7 @@ permalink: /writings/decaying-rats/
 ---
 
 <div style="text-align: center; margin-bottom: 2em;">
-  <img src="{{ 'writings/DecayingRats/cover-masks.jpg' | relative_url }}" alt="小说封面" style="width: 50%; height: auto; />
+  <img src="{{ 'writings/DecayingRats/cover-masks.jpg' | relative_url }}" alt="小说封面" style="width: 50%; height: auto;" />
 </div>
 
 ## 目录
