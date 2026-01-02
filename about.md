@@ -5,8 +5,40 @@ permalink: /about/
 subtitle: 我会像鸟儿一样，死在天空中。
 ---
 
-我目前从事计算机理论与数理逻辑相关的研究。  
-除此之外，我也持续阅读小说、电影与哲学作品，并尝试写作和弹奏钢琴。
+<style>
+.avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+.circular-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.avatar-content {
+    flex: 1;
+}
+@media (max-width: 768px) {
+    .avatar-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
+</style>
+
+<div class="avatar-container">
+    <img src="{{ 'assets/img/ME.png' | relative_url }}" alt="我的卡通形象" class="circular-avatar" />
+    <div class="avatar-content">
+        <p>我目前从事计算机理论与数理逻辑相关的研究。</p>
+        <p>除此之外，我也持续阅读小说、电影与哲学作品，并尝试写作和弹奏钢琴。</p>
+    </div>
+</div>
 
 我对以下事情长期感兴趣：
 
