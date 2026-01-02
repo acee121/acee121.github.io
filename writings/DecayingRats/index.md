@@ -40,7 +40,6 @@ permalink: /writings/decaying-rats/
 
 <div class="two-column-layout">
   <div class="directory-column">
-    <h2>目录</h2>
     <ol>
       <li><a href="{{ site.baseurl }}/writings/decaying-rats/chapter-1">第一节</a></li>
       <li><a href="{{ site.baseurl }}/writings/decaying-rats/chapter-2">第二节</a></li>
