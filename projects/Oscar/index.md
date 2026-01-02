@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 个人年度最佳影视角色
+title: 年度最佳影视角色奖
 permalink: /projects/Oscar
 ---
 
