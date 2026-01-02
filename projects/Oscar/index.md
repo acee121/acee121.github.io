@@ -10,7 +10,7 @@ permalink: /projects/Oscar
 
 ## 2025年评选
 
-### 最佳女性角色：**Elisa** Sally Cecilia Hawkins
+### 最佳女性角色：Elisa by Sally Cecilia Hawkins
 **出自电影：**《水形物语》
 
 <div style="text-align: center; margin: 20px 0;">
@@ -21,40 +21,47 @@ permalink: /projects/Oscar
 </div>
 
 **入选理由：**
-> 在这里写下为什么这个角色让你印象深刻。可以是她展现的复杂性格、精湛的表演，或是这个角色带给你的独特感受和思考。这段文字就是你个人品味的直接体现。
+> -
 
-### 最佳男性角色：**[角色名称]**
-**出自影视剧：**《[作品名称]》
+### 最佳男性角色：山音麦 by 菅田将晖
+**出自影视剧：**《花束般的恋爱》
 
 <div style="text-align: center; margin: 20px 0;">
-    <img src="{{ 'projects/Oscar/img/2025-m-01.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照1" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
-    <img src="{{ 'projects/Oscar/img/2025-m-02.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照2" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-m-01.jpg' | relative_url }}" alt="《花束般的恋爱》-山音麦剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-m-02.jpg' | relative_url }}" alt="《花束般的恋爱》-山音麦剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-m-03.jpg' | relative_url }}" alt="《花束般的恋爱》-山音麦剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-m-04.jpg' | relative_url }}" alt="《花束般的恋爱》-山音麦剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-m-05.jpg' | relative_url }}" alt="《花束般的恋爱》-山音麦剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
 </div>
 
 **入选理由：**
-> 同样，在这里记录下这个男性角色的独特魅力所在。
+> -
 
 ---
 
 ## 2024年评选
 
-### 最佳女性角色：**[角色名称]**
-**出自影视剧：**《[作品名称]`
+### 最佳女性角色：叶文洁 by 王子文
+**出自电视剧：**《三体》
 
 <div style="text-align: center; margin: 20px 0;">
-    <img src="{{ 'projects/Oscar/img/2024-f-01.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照1" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
-    <img src="{{ 'projects/Oscar/img/2024-f-02.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照2" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-f-01.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-f-02.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-f-03.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-f-04.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
 </div>
 
 **入选理由：**
 > （你的2024年评选理由）
 
-### 最佳男性角色：**[角色名称]**
-**出自影视剧：**《[作品名称]》
+### 最佳男性角色：唐志军 by 杨皓宇
+**出自影视剧：**《宇宙探索编辑部》
 
 <div style="text-align: center; margin: 20px 0;">
-    <img src="{{ 'projects/Oscar/img/2024-m-01.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照1" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
-    <img src="{{ 'projects/Oscar/img/2024-m-02.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照2" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-m-01.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-m-02.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-m-03.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2024-m-04.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
 </div>
 
 **入选理由：**
