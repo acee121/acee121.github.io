@@ -83,5 +83,5 @@ permalink: /writings/decaying-rats/chapter-3
 <div style="text-align: center;">
     <a href="{{ site.baseurl }}/writings/decaying-rats/chapter-2">上一节</a> | 
     <a href="{{ site.baseurl }}/writings/decaying-rats/">返回目录</a> | 
-    <a href="{{ site.baseurl }}/writings/decaying-rats/chapter-4/">下一节</a>
+    <a href="{{ site.baseurl }}/writings/decaying-rats/chapter-4">下一节</a>
 </div>
