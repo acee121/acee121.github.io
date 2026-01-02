@@ -10,12 +10,14 @@ permalink: /projects/Oscar
 
 ## 2025年评选
 
-### 最佳女性角色：**[角色名称]**
-**出自影视剧：**《[作品名称]》
+### 最佳女性角色：**Elisa** Sally Cecilia Hawkins
+**出自电影：**《水形物语》
 
 <div style="text-align: center; margin: 20px 0;">
-    <img src="{{ 'projects/Oscar/img/2025-f-01.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照1" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
-    <img src="{{ 'projects/Oscar/img/2025-f-02.jpg' | relative_url }}" alt="《[作品名称]》-[角色名]剧照2" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-f-01.jpg' | relative_url }}" alt="《水形物语》-Elisa剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-f-02.jpg' | relative_url }}" alt="《水形物语》-Elisa剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-f-03.jpg' | relative_url }}" alt="《水形物语》-Elisa剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
+    <img src="{{ 'projects/Oscar/img/2025-f-04.jpg' | relative_url }}" alt="《水形物语》-Elisa剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
 </div>
 
 **入选理由：**
