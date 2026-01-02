@@ -17,3 +17,5 @@ permalink: /writing/
 也是对某些问题反复逼近的尝试。
 
 因此，这里的很多文本并不追求完整性。
+
+* [腐鼠 Decaying Rats]({{ site.baseurl }}/writings/DecayingRats/index.md)
