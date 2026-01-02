@@ -18,4 +18,4 @@ permalink: /writing/
 
 因此，这里的很多文本并不追求完整性。
 
-* [腐鼠 Decaying Rats]({{ site.baseurl }}/writings/DecayingRats/index.md)
+* [腐鼠 Decaying Rats]({{ site.baseurl }}/writings/decaying-rats)
