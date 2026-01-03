@@ -22,3 +22,4 @@ permalink: /projects/
 即使最终未能完成，它们仍然延续了我短暂的生命。
 
 * [年度最佳影视角色评选]({{ site.baseurl }}/projects/Oscar)
+* [法式计算理论习题集]({{ site.baseurl }}/projects/exercises)

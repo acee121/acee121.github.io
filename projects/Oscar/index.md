@@ -24,7 +24,7 @@ permalink: /projects/Oscar
 > -
 
 ### 最佳男性角色：嬴政 by 李雪健
-**出自影视剧：**《荆轲刺秦王》
+**出自电影：**《荆轲刺秦王》
 
 <div style="text-align: center; margin: 20px 0;">
     <img src="{{ 'projects/Oscar/img/2025-m-01.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
@@ -56,7 +56,7 @@ permalink: /projects/Oscar
 > -
 
 ### 最佳男性角色：山音麦 by 菅田将晖
-**出自影视剧：**《花束般的恋爱》
+**出自电影：**《花束般的恋爱》
 
 <div style="text-align: center; margin: 20px 0;">
     <img src="{{ 'projects/Oscar/img/2024-m-01.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
@@ -87,7 +87,7 @@ permalink: /projects/Oscar
 > （你的2023年评选理由）
 
 ### 最佳男性角色：唐志军 by 杨皓宇
-**出自影视剧：**《宇宙探索编辑部》
+**出自电影：**《宇宙探索编辑部》
 
 <div style="text-align: center; margin: 20px 0;">
     <img src="{{ 'projects/Oscar/img/2023-m-01.jpg' | relative_url }}" alt="剧照" style="max-width: 45%; margin: 5px; border-radius: 5px;" />
