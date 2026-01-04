@@ -16,6 +16,6 @@ permalink: /writings/
 对我而言，写作更多是一种思考方式，  
 也是对某些问题反复逼近的尝试。
 
-因此，这里的很多文本并不追求完整性。
+与“草稿”相比，这里的工作应当有一定完整性，可以达到发表标准。
 
 * [腐鼠 Decaying Rats]({{ site.baseurl }}/writings/decaying-rats)
