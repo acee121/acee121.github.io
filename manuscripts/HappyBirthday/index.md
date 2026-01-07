@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 生日快乐
+title: 生日宴精神病人
 subtitle: 关于每个家庭必然面对的灾难
 permalink: /manuscripts/happy-birthday
 ---
