@@ -19,3 +19,4 @@ permalink: /writings/
 与“草稿”相比，这里的工作应当有一定完整性，可以达到发表标准。
 
 * [腐鼠 Decaying Rats]({{ site.baseurl }}/writings/decaying-rats)
+* [生日宴精神病人 Birthday Party Psycho]({{ site.baseurl }}/writings/birthday-psycho)
