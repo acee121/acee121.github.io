@@ -21,3 +21,4 @@ permalink: /thoughts/
 * [不必考虑战胜人工智能]({{ site.baseurl }}/thoughts/20251222) (20251222) 对如何看待AI的看法
 * [作者的丧子之痛]({{ site.baseurl }}/thoughts/20260101) (20260101) 关于作者和读者之间不可逾越的鸿沟
 * [英雄主义是理性的结果]({{ site.baseurl }}/thoughts/20260104) (20260104) 近期对英雄主义的看法
+* [晚归偶得]({{ site.baseurl }}/thoughts/20260122) (20260122) 一首小诗
