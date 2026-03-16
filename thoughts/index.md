@@ -25,3 +25,4 @@ permalink: /thoughts/
 * [晚归偶得]({{ site.baseurl }}/thoughts/20260122) (20260122) 一首小诗
 * [创造美的眼睛]({{ site.baseurl }}/thoughts/20260217) (20260217) 批判“缺少发现美的眼睛”论
 * [把绝望推到极限的不是灾难片]({{ site.baseurl }}/thoughts/20260305) (20260305) 什么样的美学最适合表现绝望
+* [人类相比AI独有的恐惧]({{ site.baseurl }}/thoughts/20260316) (20260316) 生物本能和机器本能的区别
