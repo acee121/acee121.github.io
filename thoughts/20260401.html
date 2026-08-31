@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第十二层 · The 12th Floor</title>
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#111114; --ink:#d7d2c5; --dim:#7a7468;
+    --accent:#c9a24a; --accent2:#e8d28a; --danger:#a83232; --line:#2a2620;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Songti SC",serif;
+    overflow:hidden;
+    user-select:none;
+  }
+  #app{position:relative;width:100vw;height:100vh;display:flex}
+
+  /* ---------- 电梯厅（左） ---------- */
+  #elevator{
+    width:240px;flex:0 0 240px;
+    background:linear-gradient(180deg,#0d0d10,#08080a);
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;
+    padding:18px 14px;gap:10px;
+    z-index:5;
+  }
+  #brand{font-size:12px;letter-spacing:.4em;color:var(--dim);text-align:center;margin-bottom:4px}
+  #brand b{display:block;color:var(--accent);font-size:15px;letter-spacing:.2em;margin-top:2px}
+  .floor-btn{
+    background:transparent;border:1px solid var(--line);color:var(--dim);
+    padding:9px 12px;text-align:left;cursor:pointer;
+    font-family:inherit;font-size:13px;letter-spacing:.05em;
+    display:flex;justify-content:space-between;align-items:center;
+    transition:.15s;
+  }
+  .floor-btn:hover{border-color:var(--accent);color:var(--ink)}
+  .floor-btn.active{border-color:var(--accent);color:var(--accent2);background:rgba(201,162,74,.08)}
+  .floor-btn.locked{opacity:.35;cursor:not-allowed}
+  .floor-btn .num{font-size:15px;color:var(--accent)}
+  .floor-btn.locked .num{color:var(--dim)}
+  #f12-row .floor-btn{
+    border-style:dashed;border-color:#4a3028;color:#6a5548;
+  }
+  #f12-row .floor-btn .num{color:#7a4838}
+  #elevator-foot{margin-top:auto;font-size:11px;color:#4a463e;line-height:1.7;text-align:center;border-top:1px solid var(--line);padding-top:10px}
+  #clock{color:var(--accent);font-size:12px;letter-spacing:.1em}
+
+  /* ---------- 主舞台（右） ---------- */
+  #stage{
+    flex:1;position:relative;overflow:hidden;
+    background:
+      radial-gradient(1200px 600px at 50% -10%,#1a1714 0%,transparent 60%),
+      var(--bg);
+  }
+  .scene{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .5s;padding:42px 56px;overflow:auto}
+  .scene.active{opacity:1;pointer-events:auto}
+  .scene h1{font-size:26px;letter-spacing:.16em;color:var(--accent2);font-weight:500;margin-bottom:6px}
+  .scene .sub{font-size:12px;color:var(--dim);letter-spacing:.3em;margin-bottom:26px}
+  .scene p{font-size:15px;line-height:2;color:#b9b3a5;margin-bottom:14px;max-width:640px}
+  .hot{color:var(--accent2);cursor:pointer;border-bottom:1px dashed var(--accent);padding:0 2px}
+  .hot:hover{color:#fff;background:rgba(201,162,74,.12)}
+  .note{
+    background:rgba(201,162,74,.05);border:1px solid var(--line);
+    padding:14px 18px;font-size:13px;line-height:1.9;color:#a89f8e;
+    max-width:640px;margin:16px 0;font-family:"Songti SC",serif;
+  }
+  .door-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:20px;max-width:700px}
+  .door{
+    width:120px;height:74px;border:1px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    cursor:pointer;transition:.15s;background:rgba(255,255,255,.01);
+  }
+  .door:hover{border-color:var(--accent);background:rgba(201,162,74,.06)}
+  .door .d-name{font-size:13px;color:var(--ink)}
+  .door .d-tag{font-size:10px;color:var(--dim);margin-top:4px;letter-spacing:.2em}
+  .door.locked{opacity:.35;cursor:not-allowed}
+  .door.locked:hover{border-color:var(--line);background:transparent}
+
+  /* 输入类 */
+  .input-row{display:flex;gap:10px;align-items:center;margin:18px 0;max-width:520px}
+  .input-row input{
+    flex:1;background:transparent;border:none;border-bottom:1px solid var(--dim);
+    color:var(--ink);font-family:"Courier New",monospace;font-size:18px;
+    padding:8px 4px;letter-spacing:.3em;outline:none;
+  }
+  .input-row input:focus{border-bottom-color:var(--accent)}
+  .btn{
+    background:transparent;border:1px solid var(--accent);color:var(--accent2);
+    padding:9px 20px;cursor:pointer;font-family:inherit;font-size:13px;letter-spacing:.1em;
+    transition:.15s;
+  }
+  .btn:hover{background:var(--accent);color:#0a0a0c}
+  .hint{font-size:12px;color:var(--dim);margin-top:8px;max-width:520px;line-height:1.8}
+  .err{color:var(--danger);font-size:13px;margin-top:10px;min-height:1.2em}
+
+  /* 笔记本 */
+  #notebook{
+    position:absolute;top:18px;right:18px;z-index:20;
+    width:300px;max-height:calc(100vh - 36px);
+    background:var(--panel);border:1px solid var(--line);
+    transform:translateX(calc(100% + 24px));transition:transform .4s;
+    display:flex;flex-direction:column;
+  }
+  #notebook.open{transform:translateX(0)}
+  #nb-head{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.3em;color:var(--accent);display:flex;justify-content:space-between;align-items:center}
+  #nb-head .x{cursor:pointer;color:var(--dim);font-size:16px}
+  #nb-body{padding:14px 16px;overflow:auto;font-size:13px;line-height:1.9}
+  #nb-body .nb-item{padding:8px 0;border-bottom:1px dashed #24201a;color:#a89f8e}
+  #nb-body .nb-item .k{color:var(--accent);font-family:"Courier New",monospace}
+  #nb-empty{color:var(--dim);font-style:italic}
+  #nb-toggle{
+    position:absolute;top:18px;right:18px;z-index:19;
+    background:var(--panel);border:1px solid var(--line);color:var(--accent);
+    padding:8px 14px;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.2em;
+  }
+
+  /* 终端覆层 */
+  #terminal{
+    position:absolute;inset:0;z-index:50;background:rgba(4,6,8,.96);
+    display:none;flex-direction:column;padding:0;font-family:"Courier New",monospace;
+  }
+  #terminal.on{display:flex}
+  #term-bar{display:flex;gap:8px;padding:8px 14px;background:#0a0c0e;border-bottom:1px solid #1c2428;align-items:center}
+  #term-bar .dot{width:11px;height:11px;border-radius:50%;background:#333}
+  #term-bar .t{color:#4a7060;font-size:12px;margin-left:8px;letter-spacing:.1em}
+  #term-out{flex:1;overflow:auto;padding:18px 22px;font-size:13.5px;line-height:1.9;color:#7fdc9d;white-space:pre-wrap}
+  #term-out .sys{color:#4a7060} #term-out .warn{color:#d0a040} #term-out .err{color:#d05858}
+  #term-in-row{display:flex;align-items:center;padding:10px 22px;gap:8px;border-top:1px solid #1c2428}
+  #term-in-row .p{color:#7fdc9d}
+  #term-input{background:transparent;border:none;outline:none;color:#c8e6d0;font-family:inherit;font-size:14px;flex:1}
+
+  /* 通用覆层 */
+  .overlay{position:absolute;inset:0;z-index:40;background:rgba(4,4,6,.92);display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center}
+  .overlay.on{display:flex}
+  .overlay h2{font-size:32px;letter-spacing:.2em;color:var(--accent2);font-weight:400;margin-bottom:16px}
+  .overlay p{color:#9d9688;line-height:2;max-width:560px}
+  .overlay .btn{margin-top:24px}
+
+  /* 震动 */
+  @keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-3px)}80%{transform:translate(4px,4px)}}
+  .shake{animation:shake .5s}
+
+  #flicker{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:60}
+
+  /* 主菜单 / 结局页共用 */
+  .center-scene{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px}
+  .center-scene .logo{font-size:44px;letter-spacing:.3em;color:var(--accent);margin-bottom:8px}
+  .center-scene .en{font-size:12px;letter-spacing:.6em;color:var(--dim);margin-bottom:40px}
+  .menu-btn{margin:8px;min-width:220px}
+  .end-en{font-size:11px;letter-spacing:.5em;color:var(--dim);margin-top:6px}
+  .end-mono{font-family:"Courier New",monospace;color:var(--accent);font-size:14px;letter-spacing:.2em;margin:18px 0}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- 电梯 -->
+  <aside id="elevator">
+    <div id="brand">KESTREL 大厦<b>凯 斯 特 雷 尔</b></div>
+    <div id="clock">--:--</div>
+    <div id="floor-list"></div>
+    <div id="f12-row"></div>
+    <div id="elevator-foot">
+      「本大楼共 <span style="color:var(--accent)">11</span> 层<br>请留意各楼层公告」
+    </div>
+  </aside>
+
+  <!-- 舞台 -->
+  <main id="stage">
+    <button id="nb-toggle">线 索 · 笔 记 本</button>
+    <div id="notebook">
+      <div id="nb-head"><span>线 索 笔 记 本</span><span class="x" onclick="NB.close()">✕</span></div>
+      <div id="nb-body"></div>
+    </div>
+
+    <!-- 各场景由 JS 渲染 -->
+  </main>
+</div>
+
+<!-- 终端 -->
+<div id="terminal">
+  <div id="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">DEV TOOLS · Console — index.html</span></div>
+  <div id="term-out"></div>
+  <div id="term-in-row"><span class="p">&gt;_</span><input id="term-input" autocomplete="off" spellcheck="false" placeholder="在此输入命令…"></div>
+</div>
+
+<!-- 通用覆层 -->
+<div class="overlay" id="ov"></div>
+<div id="flicker"></div>
+
+<script>
+/* ============================================================
+   第十二层 · The 12th Floor
+   单文件悬疑解谜原型
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const stage = $('#stage');
+const floors = []; // 楼层元数据
+
+/* ---------- 状态 ---------- */
+const State = {
+  current: 'lobby',
+  flags: new Set(),      // 触发过的事件
+  notebook: [],          // {k,v}
+  consoleUnlocked: false,
+  foundFragments: 0,
+  ending: null,
+};
+const SAVE_KEY = 'kestrel_save_v1';
+function save(){
+  try{localStorage.setItem(SAVE_KEY, JSON.stringify({
+    flags:[...State.flags], notebook:State.notebook,
+    consoleUnlocked:State.consoleUnlocked, current:State.current
+  }))}catch(e){}
+}
+function load(){
+  try{
+    const r=JSON.parse(localStorage.getItem(SAVE_KEY)||'{}');
+    if(!r)return;
+    State.flags=new Set(r.flags||[]);
+    State.notebook=r.notebook||[];
+    State.consoleUnlocked=!!r.consoleUnlocked;
+    State.current=r.current||'lobby';
+  }catch(e){}
+}
+
+/* ---------- 笔记本 ---------- */
+const NB = {
+  add(k,v){
+    if(State.notebook.find(x=>x.k===k)){const i=State.notebook.findIndex(x=>x.k===k);State.notebook[i].v=v;save();this.render();return;}
+    State.notebook.push({k,v});
+    this.render();save();
+    $('#nb-toggle').animate([{background:'rgba(201,162,74,.3)'},{background:'var(--panel)'}],300);
+  },
+  has(k){return State.notebook.find(x=>x.k===k);},
+  render(){
+    const b=$('#nb-body');
+    if(!State.notebook.length){b.innerHTML='<div id="nb-empty">— 尚无记录 —<br>留意散落的文字、数字与涂鸦。</div>';return;}
+    b.innerHTML=State.notebook.map(x=>`<div class="nb-item"><span class="k">${x.k}</span><br>${x.v}</div>`).join('');
+  },
+  open(){if(!State.flags.has('met_console')){$('#terminal').classList.add('on');writeTerm('tip','💡 提示：右上角「线索笔记本」记录你收集到的数字碎片，它们将在最后派上用场。');setTimeout(()=>$('#terminal').classList.remove('on'),2600);}$('#notebook').classList.add('open');},
+  close(){$('#notebook').classList.remove('open');},
+};
+$('#nb-toggle').onclick=()=>{$('#notebook').classList.contains('open')?NB.close():NB.open();};
+
+/* ---------- 场景管理 ---------- */
+function scene(id,html){
+  const el=document.createElement('section');
+  el.className='scene';el.id='scene-'+id;el.innerHTML=html;
+  stage.appendChild(el);
+  floors.push(id);
+  return el;
+}
+function go(id){
+  // 特殊场景路由
+  if(id==='f12'){ if(!State.consoleUnlocked){flash('门纹丝不动。按键没有任何反应。');return;showFloor(State.current);} }
+  document.querySelectorAll('.scene').forEach(e=>e.classList.remove('active'));
+  let el=$('#scene-'+id);
+  if(!el){renderScene(id);el=$('#scene-'+id);}
+  el.classList.add('active');
+  State.current=id;
+  updateElevator();save();
+  closeAll();
+}
+function renderScene(id){
+  const def = SCENES[id];
+  if(!def){scene(id,'<div class="center-scene"><h1>此处空无一物</h1></div>');return;}
+  scene(id, def());
+  // 绑定热区
+  document.querySelectorAll('[data-act]').forEach(el=>{
+    el.onclick=()=>ACT[el.dataset.act]?.(el);
+  });
+}
+function closeAll(){$('.overlay').forEach(o=>o.classList.remove('on'));}
+
+/* ---------- 电梯渲染 ---------- */
+const FLOOR_META = [
+  {id:'f1', num:'1F', name:'大堂 · LOBBY', sub:'入口'},
+  {id:'f2', num:'2F', name:'物业办公室', sub:'管理员'},
+  {id:'f3', num:'3F', name:'档案室', sub:'封存'},
+  {id:'f4', num:'4F', name:'维修层', sub:'管道'},
+  {id:'f5', num:'5F', name:'租户 A', sub:'空置'},
+  {id:'f6', num:'6F', name:'租户 B', sub:'废弃'},
+  {id:'f7', num:'7F', name:'走廊 · 涂鸦', sub:'? '},
+  {id:'f8', num:'8F', name:'机房', sub:'服务器'},
+  {id:'f9', num:'9F', name:'监控室', sub:'日志'},
+  {id:'f10',num:'10F',name:'天台入口', sub:'锁'},
+  {id:'f11',num:'11F',name:'屋顶 · ROOF', sub:'终点'},
+];
+function updateElevator(){
+  const list=$('#floor-list');list.innerHTML='';
+  FLOOR_META.forEach(m=>{
+    const b=document.createElement('button');
+    b.className='floor-btn';
+    const locked = isFloorLocked(m.id);
+    if(locked)b.classList.add('locked');
+    if(State.current===m.id)b.classList.add('active');
+    b.innerHTML=`<span><span class="num">${m.num}</span>　${m.name}</span><span style="font-size:10px;color:var(--dim)">${m.sub}</span>`;
+    b.onclick=()=>{if(!locked)go(m.id);else flash('这一层暂时无法进入。');};
+    list.appendChild(b);
+  });
+  // F12 行
+  const f12=$('#f12-row');
+  f12.innerHTML='';
+  const b=document.createElement('button');
+  b.className='floor-btn';
+  if(State.consoleUnlocked)b.classList.add('active');
+  b.innerHTML=`<span><span class="num">F12</span>　<span style="color:#7a4838">?? ?</span></span><span style="font-size:10px">——</span>`;
+  b.onclick=()=>{ if(State.consoleUnlocked)go('f12'); else flash('并不存在 F12。电梯面板只有 1–11。'); };
+  f12.appendChild(b);
+}
+function isFloorLocked(id){
+  // 部分楼层需要前置条件
+  if(id==='f10'&&!State.flags.has('got_roof_key'))return true;
+  if(id==='f8'&&!State.flags.has('seen_maint_note'))return true; // 需先到 4F
+  return false;
+}
+
+/* ---------- 反馈 ---------- */
+function flash(msg){
+  const o=$('#ov');
+  o.classList.add('on');
+  o.innerHTML=`<div style="color:var(--accent2);font-size:15px;line-height:2;max-width:420px">${msg}</div>`;
+  clearTimeout(o._t);
+  o._t=setTimeout(()=>o.classList.remove('on'),1600);
+}
+function flicker(){
+  const f=$('#flicker');
+  f.style.opacity=.85;
+  setTimeout(()=>f.style.opacity=0,60);
+  setTimeout(()=>f.style.opacity=.5,110);
+  setTimeout(()=>f.style.opacity=0,180);
+}
+
+/* ============================================================
+   场景定义
+   ============================================================ */
+function H(title,sub,body){return `<h1>${title}</h1><div class="sub">${sub}</div>${body}`;}
+
+const SCENES = {
+  lobby(){return H('1F · 大堂','GROUND FLOOR',`
+    <p>雨从傍晚开始就没停过。你站在凯斯特雷尔大厦的自动门前，地毯湿了一块。前台没有人，只有一盏灯亮着。</p>
+    <p>你要寻找的人——<span class="hot" data-act="ask_who">那位委托人不肯透露姓名</span>——最后出现的地方，就是这栋楼。</p>
+    <div class="note">「11 层楼，每层一个故事。<br>但有些人说，数错了。」</div>
+    <p class="hint">· 点击左侧电梯面板可以前往已开放的楼层。<br>· 留意可点击的高亮文字。<br>· 随时打开右上角的「线索笔记本」。</p>
+    <div class="door-grid">
+      <div class="door" data-act="check_board"><div class="d-name">公告栏</div><div class="d-tag">公告</div></div>
+      <div class="door" data-act="talk_guard"><div class="d-name">值班台</div><div class="d-tag">守夜人</div></div>
+    </div>
+  `);},
+  f2(){return H('2F · 物业办公室','PROPERTY MGMT',`
+    <p>门虚掩着，桌上摊着一叠报修单。墙上的楼层示意图用红笔圈了几处。</p>
+    <div class="note">「报修 #07：8F 机房空调异常噪音。已转维修部（4F）。」</div>
+    <div class="note">「备注：11 层……其实只有 10 层半。别较真。」<br><span style="color:var(--dim);font-size:11px">——署名被涂黑了</span></div>
+    <div class="door-grid">
+      <div class="door" data-act="desk_drawer"><div class="d-name">抽屉</div><div class="d-tag">翻找</div></div>
+      <div class="door" data-act="read_schedule"><div class="d-name">值班表</div><div class="d-tag">名单</div></div>
+    </div>
+  `);},
+  f3(){return H('3F · 档案室','ARCHIVE',`
+    <p>灰尘在应急灯下发亮。档案按年份排列，但 <span class="hot" data-act="year_shelf">1998 年</span> 的格子是空的——卷宗被借走了，只留下一张便签。</p>
+    <div class="note">1998 年卷宗已被「调阅」——借出人签名：<span style="color:var(--accent)">▇▇▇▇▇</span></div>
+    <p>档案柜沿墙排列，柜门上印着编号。你注意到几张没被收好的标签，散落在不同柜子上：</p>
+    <div class="note" style="font-family:'Courier New',monospace;color:#8a9a8e;line-height:2">
+      柜 A-<span style="color:var(--accent2)">410</span>　柜 A-<span style="color:var(--accent2)">411</span>　柜 A-<span style="color:var(--accent2)">412</span><br>
+      柜 A-<span style="color:var(--accent2)">430</span>　柜 A-<span style="color:var(--accent2)">431</span>　柜 A-<span style="color:var(--accent2)">432</span><br>
+      柜 A-<span style="color:var(--accent2)">450</span>　柜 A-<span style="color:var(--accent2)">451</span>　柜 A-<span style="color:var(--accent2)">452</span>
+    </div>
+    <p>每张标签背面都写着一行字，像是某人随手记下的规律：</p>
+    <div class="note" style="border-color:#3a3228;color:#c0b48e">
+      第一组：中间那个数，是两头的平均数。<br>
+      第二组：<span style="color:var(--accent2)">空位</span>，是被借走的 1998 卷宗本该在的位置。<br>
+      第三组：中间那个数，比两头都多出同一个常数。<br>
+      <span style="color:var(--accent)">—— β 是「第二组」里，那个被抽掉的空位编号。</span>
+    </div>
+    <p>你想了想：第一组 410·411·412、第三组 450·451·452 都是连续三个数。<span class="hint" style="display:inline">那第二组 430·<b style="color:var(--accent2)">??</b>·432 的中间，应该填几？</span></p>
+    <div class="input-row">
+      <input id="frag_input" maxlength="4" placeholder="　填入 β（四位数）">
+      <button class="btn" data-act="save_frag">验算并提交</button>
+    </div>
+    <div class="err" id="frag_err"></div>
+    <p class="hint">规律就在三组编号之间——它们都遵循同一套「等差」结构。</p>
+  `);},
+  f4(){return H('4F · 维修层','MAINTENANCE',`
+    <p>管道、工具柜、潮湿的水泥气味。墙上一块白板写着维修日志。</p>
+    <div class="note" style="font-family:'Courier New',monospace;color:#8a9a8e">
+      [LOG 04:12] 检查 8F 机房……正常<br>
+      [LOG 04:31] 发现通风口有<span class="hot" data-act="vent">异物</span><br>
+      [LOG 04:44] 写入调试接口 // <span style="color:var(--accent);font-size:15px">debug://kestrel/0xA3</span><br>
+      <span style="color:#4a7060">// 注：地址后缀为十六进制（hex）</span>
+    </div>
+    <p id="vent_note" style="display:none" class="hint">通风口里塞着一张对折的纸片，上面用马克笔写着：<br><span style="color:var(--accent2);font-size:16px">「他们把入口藏在了你每天都打开、却从不在意的地方。」</span></p>
+    <div class="door-grid">
+      <div class="door" data-act="tool_cabinet"><div class="d-name">工具柜</div><div class="d-tag">检索</div></div>
+    </div>
+  `);},
+  f5(){return H('5F · 租户 A','VACANT',`
+    <p>门牌写着「A-501」，门把手上积着灰。这层显然已经空了很久。</p>
+    <p>地板上有一行拖拽的痕迹，通向走廊尽头一扇没有编号的小门。</p>
+    <div class="note">「搬走的时候什么都没带……只留下那台还在运转的机器。」<br><span style="color:var(--dim);font-size:11px">——邻居的证词，写在便签上</span></div>
+    <div class="door-grid">
+      <div class="door" data-act="machine"><div class="d-name">运转中的机器</div><div class="d-tag">?</div></div>
+    </div>
+  `);},
+  f6(){return H('6F · 租户 B','ABANDONED',`
+    <p>墙壁上有大面积的涂鸦，用同一种红色反复写着同一个符号——一个向下的箭头，中间断开。</p>
+    <p>在卫生间最里侧的隔间，门板内侧刻着细小的字，需要用手机闪光灯才看得清。</p>
+    <div class="note" style="color:#a88">「当数字不再够用时，<br>　请按那个不在面板上的键。<br>　它会听见你。」</div>
+    <p class="hint" style="color:var(--accent2)">（这条线索似乎在暗示某种……超越楼层的操作。）</p>
+  `);},
+  f7(){return H('7F · 走廊','GRAFFITI',`
+    <p>这一整层都弥漫着一股铁锈味。走廊两侧全是涂鸦，但有一处明显是后来者刻意留下的——整齐、冷静，和其他的狂乱截然不同。</p>
+    <div class="note" style="border-color:#3a3228;color:#c0b48e;font-family:'Courier New',monospace;white-space:pre-wrap">>_  0xF12 ?
+>_  if (floor > 11) { /* .................. */ }
+>_  // "the key is what you already hold"
+>_  // "the door is where you already stand"</div>
+    <p class="hint">这像是某个人故意留下的路标。<code style="color:var(--accent)">0xF12</code>……一个十六进制数？还是别的什么？</p>
+    <div class="door-grid">
+      <div class="door" data-act="read_graffiti"><div class="d-name">狂乱涂鸦</div><div class="d-tag">细读</div></div>
+    </div>
+  `);},
+  f8(){return H('8F · 机房','SERVER ROOM',`
+    <p>空调确实在发出不正常的嗡鸣。一排机柜闪烁着指示灯，其中一台的屏幕亮着，停在登录界面。</p>
+    <div class="note" style="font-family:'Courier New',monospace;color:#8a9a8e">
+      kestrel-os login: <span style="color:var(--accent)">maintainer</span><br>
+      Password: <span style="color:var(--accent)">●●●●●●●●</span><br>
+      <span style="color:#4a7060">Last login: 1998-11-12  from console</span>
+    </div>
+    <div class="input-row">
+      <input id="pwd_input" maxlength="8" placeholder="　输入维护密码">
+      <button class="btn" data-act="try_pwd">确认</button>
+    </div>
+    <div class="err" id="pwd_err"></div>
+    <p class="hint">密码线索散落在别处——也许和你在 4F 维修层看到的「日志日期」有关。</p>
+  `);},
+  f9(){return H('9F · 监控室','SURVEILLANCE',`
+    <p>数十个监控画面中只有三个还在工作。录像带按日期堆叠，最上面那盘的标签被撕了一半。</p>
+    <div class="note" style="font-family:'Courier New',monospace;color:#8a9a8e">
+      [1998-11-11 23:47] cam9 —— 走廊有人影<br>
+      [1998-11-11 23:51] <span class="hot" data-act="cam_log">cam12</span> —— <span style="color:var(--danger)">NO SIGNAL</span><br>
+      [1998-11-12 00:03] all clear
+    </div>
+    <p id="cam_detail" style="display:none">你放大那条记录：<span style="color:var(--accent2)">cam12</span>——监控编号到了 12。而这栋楼只有 11 层。</p>
+    <div class="door-grid">
+      <div class="door" data-act="tape_shelf"><div class="d-name">录像带</div><div class="d-tag">查阅</div></div>
+    </div>
+  `);},
+  f10(){return H('10F · 天台入口','ROOF ACCESS',`
+    <p>一道沉重的防火门前挂着「请勿进入」的牌子，锁孔是老式机械锁。你想起在 2F 物业办公室看到过的东西。</p>
+    <div class="input-row">
+      <input id="key_input" maxlength="6" placeholder="　钥匙 / 密码">
+      <button class="btn" data-act="try_key">尝试开锁</button>
+    </div>
+    <div class="err" id="key_err"></div>
+    <p class="hint">也许你需要先回到楼下，找到能打开这道门的东西。</p>
+  `);},
+  f11(){return H('11F · 屋顶','ROOF / END',`
+    <p>风很大。雨已经停了，整座城市铺在脚下，霓虹在云层下晕开。</p>
+    <p>你找到一扇锈蚀的铁门，上面用油漆写着一个箭头，指向天空。</p>
+    <div class="note" style="color:#c0b48e">「到此为止，是大多数人的结局。<br>　但若你集齐了所有的数字——<br>　把它们按顺序拼起来，<br>　然后，去那道本不存在的门后看看。」</div>
+    <p class="hint" style="color:var(--accent2)">三段数字碎片集齐后，按顺序 α → β → γ 拼接成一个长数字，加在网页地址的末尾（# 之后），再按回车。<br>例：本页面地址 + <code style="color:var(--accent)">#你的数字</code><br><span style="color:var(--dim)">α 来自进制转换，β 来自档案柜编号，γ 来自那台机器的序列号。</span></p>
+    <div class="door-grid">
+      <div class="door" data-act="roof_ending"><div class="d-name">锈蚀铁门</div><div class="d-tag">普通结局</div></div>
+    </div>
+  `);},
+  f12(){return H('F12 · ? ? ?','SYSTEM LAYER',`
+    <p style="color:var(--accent2)">这里没有风，没有雨，只有一行行绿色的字符在黑暗中流淌。</p>
+    <p>你确实按下了那个「不存在的键」——F12。世界剥去了一层皮，露出下面的骨骼。</p>
+    <div class="note" style="font-family:'Courier New',monospace;color:#7fdc9d;border-color:#1c4030;background:rgba(127,220,157,.04)">
+      &gt; window.__kestrel_unlock = true<br>
+      &gt; Layer 12 initialized.<br>
+      &gt; Welcome, <span style="color:var(--accent)">maintainer</span>.
+    </div>
+    <p>你现在明白了一切：那 11 层只是表象。真正的第 12 层，是这栋楼运行逻辑本身——开发者工具、控制台、源代码。所有线索最终都指向这里。</p>
+    <div class="door-grid">
+      <div class="door" data-act="true_ending"><div class="d-name">源代码之核</div><div class="d-tag">真·结局</div></div>
+      <div class="door" data-act="read_source"><div class="d-name">遗留的日志</div><div class="d-tag">档案</div></div>
+    </div>
+  `);},
+};
+
+/* ============================================================
+   动作
+   ============================================================ */
+const ACT = {
+  /* ---- 1F ---- */
+  ask_who(){
+    flash('「一个想搞清楚这栋楼的人。」——这大概就是全部线索了。');
+  },
+  check_board(){
+    if(State.flags.has('board_read')){flash('公告栏上只剩下那则旧告示了。');return;}
+    State.flags.add('board_read');
+    NB.add('公告栏 · 告示','「本大楼共 11 层，1F–11F。如需协助，请联系物业（2F）。」');
+    flicker();
+    renderScene('lobby');updateElevator();
+    flash('你在告示角落发现一行极小的字：「12 除外。」');
+  },
+  talk_guard(){
+    if(State.flags.has('met_guard')){flash('守夜人低着头，似乎在假寐。');return;}
+    State.flags.add('met_guard');
+    NB.add('守夜人的话','「你来晚了。11 楼那位……早就不在了。但他留了样东西在 3 楼。」');
+    flash('「他说过，要是有人来找，就让他去 3 楼档案室。」');
+  },
+  /* ---- 2F ---- */
+  desk_drawer(){
+    if(State.flags.has('got_drawer')){flash('抽屉里已经没有别的东西了。');return;}
+    State.flags.add('got_drawer');
+    NB.add('便签 · 上段','「α —— 4F 维修层白板上那段调试地址，末尾的「0xA3」。把它从十六进制，转成我们用的十进制数。（提示：A=10，每一位乘 16 的相应次方再相加。）」');
+    // α = 0xA3 = 10*16 + 3 = 163
+    renderScene('f2');
+    flash('你找到一张被撕过的便签，只剩最上面一段。α 的取法写在上面……');
+  },
+  read_schedule(){
+    flash('值班表上，11 月 12 日那一栏的名字被墨水完全涂黑，只剩一个工号：A3。');
+    if(!NB.has('工号 A3'))NB.add('工号 A3','1998-11-12，夜班。身份不明。');
+  },
+  /* ---- 3F ---- */
+  year_shelf(){
+    if(State.flags.has('year_read')){flash('空格还在。便签你也读过了——该算的是那个空位编号。');return;}
+    State.flags.add('year_read');
+    flash('1998 年的格子整个空着。借出人把卷宗连同它的编号一起抽走了……但规律会把它还原出来。');
+  },
+  save_frag(btn){
+    const v=$('#frag_input').value.trim();
+    if(!/^\d{4}$/.test(v)){ $('#frag_err').textContent='需要四位数。看那三组档案柜编号的规律。';return;}
+    $('#frag_err').textContent='';
+    // β = 431：第二组 430·431·432 的等差中间项（430+2）
+    if(v!=='0431'&&v!=='431'){ $('#frag_err').textContent='不是这个数。三组编号都是「等差」结构——中间项 = 两头的平均数。';return;}
+    if(State.flags.has('saved_frag')){flash('已经验算过了。');return;}
+    State.flags.add('saved_frag');
+    NB.add('片段 β','0 4 3 1');
+    State.foundFragments++;
+    renderScene('f3');
+    flash('验算通过。430 与 432 之间的空位，正是 431。已记入笔记本。');
+  },
+  /* ---- 4F ---- */
+  vent(){
+    if(State.flags.has('vent_read')){flash('通风口里已经空了。');return;}
+    State.flags.add('vent_read');
+    $('#vent_note').style.display='block';
+    NB.add('通风口便签','「他们把入口藏在了你每天都打开、却从不在意的地方。」');
+    renderScene('f4');
+  },
+  tool_cabinet(){
+    if(State.flags.has('seen_maint_note')){flash('工具柜里只有扳手和螺丝。');return;}
+    State.flags.add('seen_maint_note');
+    // 解锁 8F
+    NB.add('维修手册 · 8F 密码','「系统最后被维护的那天，就是密码。日期，月日，四位。」');
+    NB.add('维修日志 · 关键日期','1998-11-12（日志顶部标注）');
+    // α 推理：白板上的调试地址后缀 0xA3（十六进制）→ 十进制 = 10*16 + 3 = 163
+    if(!NB.has('片段 α')){
+      NB.add('片段 α','1 6 3');
+      NB.add('α 的换算','0xA3（hex）= A×16 + 3 = 10×16 + 3 = 163');
+      State.foundFragments++;
+    }
+    updateElevator();
+    renderScene('f4');
+    flash('你找到一本维修手册。8F 机房的密码，是这本手册里最后那条日志的日期……');
+  },
+  /* ---- 5F ---- */
+  machine(){
+    if(State.flags.has('machine_read')){flash('机器仍在运转，发出低沉的嗡鸣。');return;}
+    State.flags.add('machine_read');
+    NB.add('机器标签','型号：KESTREL-Δ7　|　铭牌背面刻着一个三位数：<span style="color:var(--accent)">007</span>');
+    NB.add('片段 γ','0 0 7');
+    if(!State.flags.has('gamma_seen')){State.flags.add('gamma_seen');State.foundFragments++;}
+    flash('机器侧面贴着一张标签——型号 KESTREL-Δ7。而铭牌背面，刻着一个三位数：007。');
+  },
+  /* ---- 6F ---- */
+  read_graffiti(){flash('狂乱的涂鸦反复写着「下面还有一层」。冷静的那段则写着：「按那个不在面板上的键。」');},
+  /* ---- 7F ---- */
+  read_graffiti(){/* alias */},
+  /* ---- 8F ---- */
+  try_pwd(){
+    const v=$('#pwd_input').value.trim();
+    if(v==='1112'||v==='19981112'){
+      State.flags.add('pwd_ok');
+      NB.add('8F 终端 · 提取','访问日志片段：「…transfer complete. fragments: 3/3」');
+      NB.add('γ 的确认','5F 机器铭牌背面的 007——终端日志印证了它的作用。');
+      // 8F 登录不再新增片段（γ 已在 5F 获得），此处只做剧情确认 + 推进
+      updateElevator();
+      // 密码正确：找到通往 10F 的钥匙
+      NB.add('天台钥匙编号','PERMIT-77');
+      State.flags.add('got_roof_key');
+      updateElevator();
+      renderScene('f8');
+      flash('登录成功。终端输出一段日志，并弹出一把电子钥匙的权限记录。');
+      return;
+    }
+    if(v){$('#pwd_err').textContent='密码错误。提示：4F 维修日志里那条记录的日期（月日，四位）。';return;}
+    $('#pwd_err').textContent='需要输入密码。';
+  },
+  /* ---- 9F ---- */
+  cam_log(){
+    if(State.flags.has('cam_read')){flash('cam12 依然显示 NO SIGNAL。');return;}
+    State.flags.add('cam_read');
+    $('#cam_detail').style.display='block';
+    NB.add('监控 cam12','信号丢失于 1998-11-11 23:51。编号 12 不存在于楼层表。');
+    renderScene('f9');
+    flash('cam12——这栋楼没有第 12 个摄像头。除非……');
+  },
+  tape_shelf(){
+    if(State.flags.has('tape_read')){flash('录像带只剩下空白的噪音。');return;}
+    State.flags.add('tape_read');
+    NB.add('录像带标签','「给找到这里的人：3 段数字，按顺序。α → β → γ。」');
+    flash('一盘录像带的标签上写着数字拼接的顺序。');
+  },
+  /* ---- 10F ---- */
+  try_key(){
+    const v=$('#key_input').value.trim();
+    if(v==='77'||v==='007'||v==='PERMIT-77'){
+      State.flags.add('roof_open');
+      renderScene('f10');
+      go('f11');
+      flash('锁「咔嗒」一声开了。通往天台的路，通了。');
+      return;
+    }
+    if(v){$('#key_err').textContent='钥匙不对。也许该去 8F 机房找权限记录。';return;}
+    $('#key_err').textContent='需要钥匙或密码。';
+  },
+  /* ---- 11F ---- */
+  roof_ending(){
+    // 普通结局
+    showEnding('normal');
+  },
+};
+
+/* 直接在 F12 场景下的动作（因为场景可能被重新渲染） */
+function bindDynamic(){
+  document.querySelectorAll('[data-act]').forEach(el=>{
+    el.onclick=()=>ACT[el.dataset.act]?.(el);
+  });
+  // F12 专属动作
+  const t=()=>{};
+}
+// 重写 go 以重新绑定
+const _origGo=go;
+
+/* ============================================================
+   终端（F12 控制台）
+   ============================================================ */
+const termOut=$('#term-out');
+const termInput=$('#term-input');
+function writeTerm(cls,text){termOut.innerHTML+=`<div class="${cls||''}">${text}</div>`;termOut.scrollTop=termOut.scrollHeight;}
+function bootTerminal(){
+  termOut.innerHTML='';
+  writeTerm('sys','Kestrel OS // developer console');
+  writeTerm('sys','Type "help" for available commands.');
+  writeTerm('','');
+  termInput.value='';
+  termInput.focus();
+}
+const COMMANDS={
+  help(){writeTerm('','可用命令：');writeTerm('sys','  help          显示本列表');writeTerm('sys','  whoami        你是谁');writeTerm('sys','  ls             列出当前目录');writeTerm('sys','  cat [file]     查看文件');writeTerm('sys','  unlock <code>  输入解锁码');writeTerm('sys','  clear          清屏');writeTerm('sys','  exit           关闭控制台');},
+  whoami(){writeTerm('','maintainer (guest)');writeTerm('warn','权限受限。完成解锁以提升权限。');},
+  ls(){
+    writeTerm('sys','./');
+    writeTerm('','fragments/   maintenance.log   .door   README.txt');
+  },
+  cat(args){
+    const f=args[0];
+    if(!f){writeTerm('err','usage: cat [file]');return;}
+    if(f==='maintenance.log'){writeTerm('','[1998-11-12] maintainer logged in from console');writeTerm('','[1998-11-12] "they will come looking. leave the fragments where they can find them."');writeTerm('','[1998-11-12] fragments split into 3. order: α → β → γ');writeTerm('warn','—— end of file ——');return;}
+    if(f==='README.txt'){writeTerm('','欢迎来到第 12 层。');writeTerm('','这里不属于楼层，属于规则。');writeTerm('','要真正进入，请先： unlock <你的解锁码>');return;}
+    if(f==='.door'){writeTerm('warn','door: locked. (require unlock)');return;}
+    writeTerm('err','cat: '+f+': No such file or directory');
+  },
+  unlock(args){
+    const code=(args[0]||'').toLowerCase();
+    // 解锁码 = 三段数字按顺序拼接：α(163) β(0431) γ(007) → 1630431007
+    const valid=['1630431007','1630431007'.slice(0,3)+'0431'+'007'];
+    if(['1630431007','0431163007','0071630431'].includes(code)|| code==='1630431007'){
+      State.consoleUnlocked=true;
+      State.flags.add('met_console');
+      save();
+      writeTerm('','verifying…');
+      setTimeout(()=>{writeTerm('warn','> fragment α … OK');},300);
+      setTimeout(()=>{writeTerm('warn','> fragment β … OK');},700);
+      setTimeout(()=>{writeTerm('warn','> fragment γ … OK');},1100);
+      setTimeout(()=>{
+        writeTerm('','');
+        writeTerm('sys','ACCESS GRANTED.');
+        writeTerm('','> window.__kestrel_unlock = true');
+        writeTerm('','> Layer 12 initialized.');
+        writeTerm('','你可以 now 关闭控制台——电梯面板上，多了一个从未存在的选项。');
+        termInput.disabled=true;
+        updateElevator();
+        // 震动 + 闪光
+        document.body.classList.add('shake');
+        flicker();
+        setTimeout(()=>document.body.classList.remove('shake'),600);
+      },1500);
+      return;
+    }
+    writeTerm('err','解锁码无效。提示：三段数字按顺序 α → β → γ 拼接。');
+    writeTerm('sys','（可在「线索笔记本」查看已收集的片段，以及它们的来源）');
+  },
+  clear(){termOut.innerHTML='';},
+  exit(){closeTerminal();},
+};
+function execCommand(){
+  const raw=termInput.value.trim();
+  if(!raw)return;
+  writeTerm('','> '+raw);
+  const [cmd,...args]=raw.split(/\s+/);
+  (COMMANDS[cmd]||(()=>writeTerm('err','command not found: '+cmd+'. type "help".'))) (args);
+  termInput.value='';
+  termInput.focus();
+}
+function openTerminal(){if(State.consoleUnlocked){go('f12');return;}bootTerminal();$('#terminal').classList.add('on');}
+function closeTerminal(){$('#terminal').classList.remove('on');}
+termInput.addEventListener('keydown',e=>{if(e.key==='Enter')execCommand();});
+// 阻止 F12 默认行为并接管
+window.addEventListener('keydown',e=>{
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='i'||e.key==='J'||e.key==='j'))){
+    e.preventDefault();
+    openTerminal();
+  }
+  if(e.key==='Escape'){closeTerminal();NB.close();closeAll();}
+});
+
+/* ============================================================
+   结局
+   ============================================================ */
+function showEnding(type){
+  const o=$('#ov');
+  o.classList.add('on');
+  if(type==='normal'){
+    State.ending='normal';save();
+    o.innerHTML=`
+      <div class="end-en">ENDING A</div>
+      <h2>到此为止</h2>
+      <p>你推开锈蚀的铁门，风灌了满身。霓虹在云层下晕开，整座城市铺在脚下。<br><br>
+      你找到了你要找的人留下的最后一行字——「我来过。」<br><br>
+      你以为故事结束了。但你隐约记得，那些数字碎片，你并没有全部用上。</p>
+      <div class="end-mono">片段 α : 1 6 3<br>片段 β : 0 4 3 1<br>片段 γ : 0 0 7</div>
+      <p style="color:var(--accent)">若把它们按顺序（α→β→γ）拼接成 <b>1630431007</b>，<br>加在网页地址 # 之后回车——<br>也许，还有另一扇门。</p>
+      <button class="btn menu-btn" onclick="location.reload()">重新开始</button>
+    `;
+  }else if(type==='true'){
+    State.ending='true';save();
+    o.innerHTML=`
+      <div class="end-en">ENDING B · TRUE</div>
+      <h2>第十二层</h2>
+      <p>你没有推开那扇铁门。你按下了 <b style="color:var(--accent)">F12</b>。<br><br>
+      世界剥去一层皮，露出骨骼——源代码、控制台、调试接口。<br>
+      原来那 11 层只是表象。真正的第 12 层，是这栋楼运行的逻辑本身。</p>
+      <div class="end-mono">window.__kestrel_unlock = true<br>Layer 12 initialized.</div>
+      <p>留言浮现出来：<br><br>
+      「如果有人读到这里——<br>　是的，是我。我把真相藏进了规则里，<br>　因为最安全的地方，是每个人都看、却没人会去读的地方。<br>　1998 年的事没有消失，它只是被编译进了这栋楼的每一行代码。<br>　谢谢你，找到了我。」</p>
+      <p style="color:var(--accent);margin-top:20px">—— 全 剧 终 ——</p>
+      <button class="btn menu-btn" onclick="location.reload()">再玩一次</button>
+    `;
+  }
+}
+
+// F12 场景下的动态动作（事件委托兜底）
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el)return;
+  const act=el.dataset.act;
+  if(act==='true_ending')showEnding('true');
+  if(act==='read_source'){
+    flash('「我在每一层都留了一句话。把它们连起来读，就是钥匙。」<br><br>（其实你早已集齐——三段数字，α→β→γ。）');
+  }
+  bindDynamic();
+});
+
+/* ============================================================
+   URL 哈希：隐藏入口检测
+   ============================================================ */
+function checkHash(){
+  const h=location.hash.replace(/^#/,'');
+  if(!h)return;
+  // 真·隐藏结局入口：拼接码 或 直接指令
+  if(h==='1630431007'||h==='true'||h==='12'){
+    if(!State.consoleUnlocked){
+      // 优雅降级：提示玩家去用 F12
+      if(h==='1630431007'){flash('你拼对了数字——但门不会从外部打开。你需要先「进入」F12（按键盘 F12），在那里输入解锁码。');return;}
+    }
+    State.consoleUnlocked=true;
+    State.flags.add('met_console');
+    updateElevator();save();
+    go('f12');
+    setTimeout(()=>showEnding('true'),400);
+    return;
+  }
+  // 彩蛋：在 URL 里输入其他指令
+  if(['help','hint','f12','console'].includes(h.toLowerCase())){
+    flash('聪明的尝试。但入口不在地址栏里——它在键盘上。试试按一下 <b style="color:var(--accent)">F12</b>。');
+    return;
+  }
+}
+window.addEventListener('hashchange',checkHash);
+
+/* ============================================================
+   时钟 & 初始化
+   ============================================================ */
+function clock(){
+  const d=new Date();const p=n=>String(n).padStart(2,'0');
+  $('#clock').textContent=`1998 · 11 · 12　${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function init(){
+  load();
+  clock();setInterval(clock,1000);
+  // 渲染所有场景（隐藏）
+  Object.keys(SCENES).forEach(id=>{if(!$('#scene-'+id))renderScene(id);});
+  bindDynamic();
+  updateElevator();
+  NB.render();
+  go(State.current||'lobby');
+  checkHash();
+  // 首次提示
+  if(!State.flags.size){
+    setTimeout(()=>flash('提示：先去 <b style="color:var(--accent)">2F 物业办公室</b> 看看。'),900);
+  }
+}
+
+/* 重新渲染后重新绑定（go 之后） */
+const _origRender=renderScene;
+// 监听 DOM 变化兜底绑定
+new MutationObserver(bindDynamic).observe(stage,{childList:true,subtree:true});
+
+init();
+</script>
+</body>
+</html>
