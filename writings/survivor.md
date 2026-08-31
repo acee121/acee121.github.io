@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 生还者手记
-subtitle: 20260405
+subtitle: 20260623
 permalink: /writings/survivor
 ---
 
