@@ -20,3 +20,4 @@ permalink: /writings/
 
 * [腐鼠 Decaying Rats]({{ site.baseurl }}/writings/decaying-rats)
 * [生日宴精神病人 Birthday Party Psycho]({{ site.baseurl }}/writings/birthday-psycho)
+* [生还者手记]({{ site.baseurl }}/writings/survivor)
